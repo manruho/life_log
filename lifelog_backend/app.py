@@ -11,12 +11,33 @@ app = Flask(__name__)
 CORS(app)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE_PATH = os.path.join(BASE_DIR, "lifelog.db")
+DATA_DIR = os.path.join(BASE_DIR, "data")
+os.makedirs(DATA_DIR, exist_ok=True)
+
+
+def resolve_database_path() -> str:
+    raw_url = os.environ.get("LIFELOG_DATABASE_URL")
+    if raw_url:
+        if raw_url.startswith("sqlite:///"):
+            resolved = raw_url.replace("sqlite:///", "", 1)
+        else:
+            resolved = raw_url
+        directory = os.path.dirname(resolved) or "."
+        os.makedirs(directory, exist_ok=True)
+        return resolved
+    default_path = os.path.join(DATA_DIR, "lifelog.db")
+    os.makedirs(os.path.dirname(default_path), exist_ok=True)
+    return default_path
+
+
+DATABASE_PATH = resolve_database_path()
 
 
 def get_db() -> sqlite3.Connection:
-    conn = sqlite3.connect(DATABASE_PATH)
+    conn = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=WAL;")
+    conn.execute("PRAGMA foreign_keys=ON;")
     return conn
 
 

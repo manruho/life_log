@@ -19,3 +19,18 @@ body {
 .bottom-sheet {
   @apply fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl p-5 z-50 border-t border-slate-100;
 }
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.wheel-scroll {
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}

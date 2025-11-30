@@ -4,6 +4,7 @@ import { BottomSheet } from "../components/BottomSheet";
 import { EventList } from "../components/EventList";
 import { HeaderSummary } from "../components/HeaderSummary";
 import { ValueBar } from "../components/ValueBar";
+import { TimeField } from "../components/TimeField";
 import { createEvent, deleteEvent, fetchEvents } from "../api/eventsApi";
 import { fetchSummary } from "../api/summaryApi";
 import { DailySummary } from "../types/Summary";
@@ -145,15 +146,7 @@ export const HomePage = () => {
       </div>
 
       <BottomSheet open={activeSheet === "sleep_start"} title="寝る" onClose={() => setActiveSheet(null)}>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>時刻</span>
-          <input
-            type="datetime-local"
-            className="w-full rounded-xl border border-slate-200 px-3 py-2"
-            value={form.timestamp}
-            onChange={(e) => setForm((f) => ({ ...f, timestamp: e.target.value }))}
-          />
-        </label>
+        <TimeField label="時刻" value={form.timestamp} onChange={(value) => setForm((f) => ({ ...f, timestamp: value }))} />
         <label className="flex flex-col gap-1 text-sm">
           <span>気分 (-2..2)</span>
           <input
@@ -182,15 +175,7 @@ export const HomePage = () => {
       </BottomSheet>
 
       <BottomSheet open={activeSheet === "wake_up"} title="起きた" onClose={() => setActiveSheet(null)}>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>時刻</span>
-          <input
-            type="datetime-local"
-            className="w-full rounded-xl border border-slate-200 px-3 py-2"
-            value={form.timestamp}
-            onChange={(e) => setForm((f) => ({ ...f, timestamp: e.target.value }))}
-          />
-        </label>
+        <TimeField label="時刻" value={form.timestamp} onChange={(value) => setForm((f) => ({ ...f, timestamp: value }))} />
         <ValueBar
           label="起床の満足度 (1-5)"
           min={1}
@@ -269,15 +254,7 @@ export const HomePage = () => {
       </BottomSheet>
 
       <BottomSheet open={activeSheet === "nap_start"} title="昼寝開始" onClose={() => setActiveSheet(null)}>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>時刻</span>
-          <input
-            type="datetime-local"
-            className="w-full rounded-xl border border-slate-200 px-3 py-2"
-            value={form.timestamp}
-            onChange={(e) => setForm((f) => ({ ...f, timestamp: e.target.value }))}
-          />
-        </label>
+        <TimeField label="時刻" value={form.timestamp} onChange={(value) => setForm((f) => ({ ...f, timestamp: value }))} />
         <button
           className="w-full bg-accent text-white rounded-xl py-3 font-semibold"
           onClick={() => saveEvent("nap_start", form)}
@@ -287,15 +264,7 @@ export const HomePage = () => {
       </BottomSheet>
 
       <BottomSheet open={activeSheet === "nap_end"} title="昼寝終了" onClose={() => setActiveSheet(null)}>
-        <label className="flex flex-col gap-1 text-sm">
-          <span>時刻</span>
-          <input
-            type="datetime-local"
-            className="w-full rounded-xl border border-slate-200 px-3 py-2"
-            value={form.timestamp}
-            onChange={(e) => setForm((f) => ({ ...f, timestamp: e.target.value }))}
-          />
-        </label>
+        <TimeField label="時刻" value={form.timestamp} onChange={(value) => setForm((f) => ({ ...f, timestamp: value }))} />
         <button
           className="w-full bg-accent text-white rounded-xl py-3 font-semibold"
           onClick={() => saveEvent("nap_end", form)}

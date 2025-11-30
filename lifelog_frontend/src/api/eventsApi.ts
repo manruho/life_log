@@ -1,6 +1,5 @@
+import { API_BASE } from "./baseUrl";
 import { LifelogEvent, NewEventPayload } from "../types/Event";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 export async function fetchEvents(date: string): Promise<LifelogEvent[]> {
   const res = await fetch(`${API_BASE}/api/events?date=${date}`);
