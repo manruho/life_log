@@ -4,7 +4,7 @@ import sqlite3
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -13,6 +13,7 @@ CORS(app)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 os.makedirs(DATA_DIR, exist_ok=True)
+FRONTEND_DIST = os.path.abspath(os.path.join(BASE_DIR, "..", "lifelog_frontend", "dist"))
 
 
 def resolve_database_path() -> str:
@@ -260,6 +261,27 @@ def daily_summary():
 
     summaries = summarize_events(events, target_dates)
     return jsonify(summaries)
+
+
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve_frontend(path: str):
+    # Serve built frontend assets if they exist; otherwise show a helpful message.
+    if path.startswith("api"):
+        return jsonify({"error": "Not found"}), 404
+
+    if os.path.exists(FRONTEND_DIST):
+        file_path = os.path.join(FRONTEND_DIST, path)
+        if path and os.path.exists(file_path):
+            return send_from_directory(FRONTEND_DIST, path)
+        return send_from_directory(FRONTEND_DIST, "index.html")
+
+    return jsonify(
+        {
+            "message": "Frontend build not found. Run `npm run build` in lifelog_frontend and restart the server.",
+            "expected_dist": FRONTEND_DIST,
+        }
+    ), 404
 
 
 if __name__ == "__main__":
