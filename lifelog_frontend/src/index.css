@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Manrope', system-ui, sans-serif;
+  background: linear-gradient(135deg, #f8fafc 0%, #eef1f7 50%, #e6e9f0 100%);
+  color: #0f172a;
+}
+
+.card {
+  @apply bg-white rounded-2xl shadow-card p-5 border border-slate-100;
+}
+
+.pill-button {
+  @apply w-full flex items-center justify-between rounded-2xl bg-white shadow-card px-5 py-4 transition active:scale-[0.99] hover:-translate-y-0.5 border border-slate-100;
+}
+
+.bottom-sheet {
+  @apply fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl p-5 z-50 border-t border-slate-100;
+}
