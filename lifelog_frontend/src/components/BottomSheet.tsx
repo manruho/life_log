@@ -39,6 +39,9 @@ export const BottomSheet: React.FC<Props> = ({ open, title, onClose, children })
   }, [dragging, dragY, onClose]);
 
   const startDrag = (event: React.PointerEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    // 入力フィールド上でのドラッグは無視して誤作動を防ぐ
+    if (target.closest("input, textarea, select, button, [data-no-drag]")) return;
     startYRef.current = event.clientY;
     setDragging(true);
   };
@@ -53,6 +56,7 @@ export const BottomSheet: React.FC<Props> = ({ open, title, onClose, children })
           transform: `translateY(${dragY}px)`,
           transition: dragging ? "none" : "transform 0.2s ease-out",
         }}
+        onPointerDown={startDrag}
       >
         <div className="w-12 h-1.5 bg-slate-300 rounded-full mx-auto mb-3" onPointerDown={startDrag} />
         <div className="flex justify-between items-center mb-3">

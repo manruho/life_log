@@ -42,39 +42,29 @@ const LABELS: Record<string, string> = {
 
 export const EventListItem: React.FC<Props> = ({ event, onDelete }) => {
   const [offset, setOffset] = useState(0);
-  const [locked, setLocked] = useState(false);
   const [removing, setRemoving] = useState(false);
-  const maxSwipe = -140;
-  const deleteThreshold = -120;
+  const maxSwipe = -160;
+  const deleteThreshold = -110;
 
   const handlers = useSwipeable({
     onSwiping: ({ deltaX }) => {
-      if (locked) return;
-      if (deltaX < 0) {
-        setOffset(Math.max(deltaX, maxSwipe));
-      } else {
-        setOffset(Math.min(deltaX, 0));
-      }
+      if (removing) return;
+      const next = deltaX < 0 ? Math.max(deltaX, maxSwipe) : Math.min(deltaX, 0);
+      setOffset(next);
     },
-    onSwipedLeft: () => {
-      if (offset <= deleteThreshold) {
+    onSwiped: ({ deltaX }) => {
+      if (removing) return;
+      if (deltaX <= deleteThreshold) {
         setOffset(maxSwipe);
         setRemoving(true);
-        setTimeout(() => {
-          if (event.id) onDelete(event.id);
-        }, 180);
+        setTimeout(() => event.id && onDelete(event.id), 160);
       } else {
-        setOffset(maxSwipe / 2);
-        setLocked(true);
+        setOffset(0);
       }
-    },
-    onSwipedRight: () => {
-      if (removing) return;
-      setOffset(0);
-      setLocked(false);
     },
     preventScrollOnSwipe: true,
     trackMouse: false,
+    trackTouch: true,
   });
 
   const triggerDelete = () => {
@@ -108,7 +98,7 @@ export const EventListItem: React.FC<Props> = ({ event, onDelete }) => {
         </div>
         <button
           className={`text-xs font-semibold text-rose-600 border border-transparent rounded-full px-3 py-1 transition ${
-            locked ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+            offset <= deleteThreshold / 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
           }`}
           onClick={triggerDelete}
         >

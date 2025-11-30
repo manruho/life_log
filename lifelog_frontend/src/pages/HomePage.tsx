@@ -96,7 +96,7 @@ export const HomePage = () => {
     try {
       await createEvent({
         event_type: eventType,
-        timestamp: (extra.timestamp || form.timestamp),
+        timestamp: extra.timestamp || form.timestamp,
         mood: extra.mood,
         condition: extra.condition,
         wake_satisfaction: extra.wake_satisfaction,
@@ -108,6 +108,7 @@ export const HomePage = () => {
       await refresh();
     } catch (err) {
       console.error(err);
+      alert("保存に失敗しました。ネットワークとAPI接続を確認してください。");
     }
   };
 
